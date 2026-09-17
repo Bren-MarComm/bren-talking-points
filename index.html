@@ -122,6 +122,25 @@
   </div>
 </div>
 
+<div class="modal" id="export-modal">
+  <div class="modal-backdrop" id="export-modal-backdrop"></div>
+  <div class="modal-body">
+    <h2>Export talking points</h2>
+    <p class="modal-note">
+      All <span id="export-count"></span> talking points as JSON. This is your backup, and how you
+      move them to another browser or hand them to a colleague, who pastes it into <strong>Import
+      batch</strong>.
+    </p>
+    <textarea id="export-textarea" rows="14" readonly spellcheck="false"></textarea>
+    <p id="export-status" class="status-line"></p>
+    <div class="modal-actions">
+      <button type="button" id="export-modal-close" class="btn">Close</button>
+      <button type="button" id="export-download-btn" class="btn" hidden>Download file</button>
+      <button type="button" id="export-copy-btn" class="btn btn-primary">Copy JSON</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="import-modal">
   <div class="modal-backdrop" id="import-modal-backdrop"></div>
   <div class="modal-body">

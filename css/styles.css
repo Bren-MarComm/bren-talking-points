@@ -1,13 +1,93 @@
 :root {
-  --ucsb-navy: #003660;
   --ucsb-gold: #febc11;
-  --bren-teal: #00778b;
+  --accent: #00778b;
+  --accent-strong: #005f70;
+  --accent-contrast: #ffffff;
   --ink: #1c2530;
   --ink-soft: #5a6672;
   --line: #dfe3e8;
   --surface: #ffffff;
+  --surface-sunken: #fbfcfd;
   --canvas: #f4f6f8;
+  --field-bg: #ffffff;
+  --heading: #003660;
+  --header-bg: #003660;
+  --header-ink: #ffffff;
+  --header-ink-soft: #c6d4e0;
+  --badge-bg: #febc11;
+  --badge-ink: #43320a;
+  --tag-topic-bg: #e4eef4;
+  --tag-topic-ink: #10516c;
+  --tag-audience-bg: #fdf1d5;
+  --tag-audience-ink: #7a5405;
+  --tag-event-bg: #e8e6f6;
+  --tag-event-ink: #453c85;
+  --tag-universal-bg: #eef1f4;
+  --tag-universal-ink: #5a6672;
+  --code-bg: #eef1f4;
   --shadow: 0 1px 3px rgba(0, 24, 48, 0.08);
+  --shadow-modal: 0 12px 40px rgba(0, 20, 40, 0.3);
+  --backdrop: rgba(10, 25, 40, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --accent: #48bccf;
+    --accent-strong: #6fd3e3;
+    --accent-contrast: #05212a;
+    --ink: #e3e9ef;
+    --ink-soft: #9aa8b6;
+    --line: #2a3644;
+    --surface: #16202c;
+    --surface-sunken: #131c26;
+    --canvas: #0e1620;
+    --field-bg: #101a24;
+    --heading: #8fd3e2;
+    --header-bg: #071f34;
+    --header-ink: #f2f6fa;
+    --header-ink-soft: #9fb4c6;
+    --tag-topic-bg: #133243;
+    --tag-topic-ink: #9ed8ea;
+    --tag-audience-bg: #3a2f10;
+    --tag-audience-ink: #f0cf7a;
+    --tag-event-bg: #2a2750;
+    --tag-event-ink: #c3bdf5;
+    --tag-universal-bg: #1c2733;
+    --tag-universal-ink: #93a1ae;
+    --code-bg: #1c2733;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    --shadow-modal: 0 12px 40px rgba(0, 0, 0, 0.6);
+    --backdrop: rgba(3, 9, 16, 0.65);
+  }
+}
+
+:root[data-theme="dark"] {
+  --accent: #48bccf;
+  --accent-strong: #6fd3e3;
+  --accent-contrast: #05212a;
+  --ink: #e3e9ef;
+  --ink-soft: #9aa8b6;
+  --line: #2a3644;
+  --surface: #16202c;
+  --surface-sunken: #131c26;
+  --canvas: #0e1620;
+  --field-bg: #101a24;
+  --heading: #8fd3e2;
+  --header-bg: #071f34;
+  --header-ink: #f2f6fa;
+  --header-ink-soft: #9fb4c6;
+  --tag-topic-bg: #133243;
+  --tag-topic-ink: #9ed8ea;
+  --tag-audience-bg: #3a2f10;
+  --tag-audience-ink: #f0cf7a;
+  --tag-event-bg: #2a2750;
+  --tag-event-ink: #c3bdf5;
+  --tag-universal-bg: #1c2733;
+  --tag-universal-ink: #93a1ae;
+  --code-bg: #1c2733;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 12px 40px rgba(0, 0, 0, 0.6);
+  --backdrop: rgba(3, 9, 16, 0.65);
 }
 
 * {
@@ -29,7 +109,7 @@ h1, h2, h3 {
 }
 
 code {
-  background: #eef1f4;
+  background: var(--code-bg);
   padding: 0.1em 0.35em;
   border-radius: 3px;
   font-size: 0.9em;
@@ -44,8 +124,8 @@ code {
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  background: var(--ucsb-navy);
-  color: #fff;
+  background: var(--header-bg);
+  color: var(--header-ink);
   border-bottom: 3px solid var(--ucsb-gold);
 }
 
@@ -57,7 +137,7 @@ code {
 .subtitle {
   margin: 4px 0 0;
   font-size: 13px;
-  color: #c6d4e0;
+  color: var(--header-ink-soft);
 }
 
 .header-actions {
@@ -79,8 +159,8 @@ code {
 .sidebar,
 .script-column {
   position: sticky;
-  top: 16px;
-  max-height: calc(100vh - 32px);
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+  max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 32px);
   overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -107,7 +187,7 @@ code {
   font-size: 15px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--ucsb-navy);
+  color: var(--heading);
 }
 
 .filter-group {
@@ -161,7 +241,7 @@ select {
   padding: 7px 9px;
   border: 1px solid var(--line);
   border-radius: 5px;
-  background: #fff;
+  background: var(--field-bg);
 }
 
 textarea {
@@ -170,10 +250,16 @@ textarea {
 
 input[type="search"]:focus,
 textarea:focus,
-select:focus {
-  outline: 2px solid var(--bren-teal);
+select:focus,
+input[type="checkbox"]:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
   outline-offset: -1px;
-  border-color: var(--bren-teal);
+  border-color: var(--accent);
+}
+
+button:focus-visible {
+  outline-offset: 1px;
 }
 
 .checkbox-row {
@@ -188,6 +274,7 @@ select:focus {
 .checkbox-row input {
   margin: 3px 0 0;
   flex: none;
+  accent-color: var(--accent);
 }
 
 .checkbox-row.topic-parent {
@@ -214,25 +301,26 @@ select:focus {
   padding: 7px 12px;
   border-radius: 5px;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--surface);
   color: var(--ink);
   cursor: pointer;
 }
 
 .btn:hover {
-  border-color: var(--bren-teal);
-  color: var(--bren-teal);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .btn-primary {
-  background: var(--bren-teal);
-  border-color: var(--bren-teal);
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
 }
 
 .btn-primary:hover {
-  background: #005f70;
-  color: #fff;
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--accent-contrast);
 }
 
 .btn-small {
@@ -246,7 +334,7 @@ select:focus {
   background: none;
   border: none;
   padding: 0;
-  color: var(--bren-teal);
+  color: var(--accent);
   cursor: pointer;
   text-decoration: underline;
 }
@@ -257,14 +345,14 @@ select:focus {
   padding: 3px 8px;
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: #fff;
+  background: var(--surface);
   color: var(--ink-soft);
   cursor: pointer;
 }
 
 .icon-btn:hover:not(:disabled) {
-  border-color: var(--bren-teal);
-  color: var(--bren-teal);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .icon-btn:disabled {
@@ -303,6 +391,10 @@ select:focus {
   cursor: pointer;
 }
 
+.add-to-script input {
+  accent-color: var(--accent);
+}
+
 .point-card-actions {
   display: flex;
   gap: 6px;
@@ -322,27 +414,26 @@ select:focus {
   font-size: 11.5px;
   padding: 2px 8px;
   border-radius: 10px;
-  white-space: nowrap;
 }
 
 .tag-topic {
-  background: #e4eef4;
-  color: #10516c;
+  background: var(--tag-topic-bg);
+  color: var(--tag-topic-ink);
 }
 
 .tag-audience {
-  background: #fdf1d5;
-  color: #7a5405;
+  background: var(--tag-audience-bg);
+  color: var(--tag-audience-ink);
 }
 
 .tag-event {
-  background: #e8e6f6;
-  color: #453c85;
+  background: var(--tag-event-bg);
+  color: var(--tag-event-ink);
 }
 
 .tag-universal {
-  background: #eef1f4;
-  color: var(--ink-soft);
+  background: var(--tag-universal-bg);
+  color: var(--tag-universal-ink);
   font-style: italic;
 }
 
@@ -359,10 +450,11 @@ select:focus {
   min-width: 20px;
   padding: 1px 6px;
   border-radius: 10px;
-  background: var(--ucsb-gold);
-  color: #43320a;
+  background: var(--badge-bg);
+  color: var(--badge-ink);
   font-size: 12px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .script-items {
@@ -371,11 +463,11 @@ select:focus {
 
 .script-item {
   border: 1px solid var(--line);
-  border-left: 3px solid var(--bren-teal);
+  border-left: 3px solid var(--accent);
   border-radius: 5px;
   padding: 8px 10px;
   margin-bottom: 8px;
-  background: #fbfcfd;
+  background: var(--surface-sunken);
 }
 
 .script-item p {
@@ -397,7 +489,7 @@ select:focus {
 .status-line {
   margin: 8px 0 0;
   font-size: 12.5px;
-  color: var(--bren-teal);
+  color: var(--accent);
   min-height: 1.2em;
   opacity: 0;
   transition: opacity 0.15s;
@@ -429,7 +521,7 @@ select:focus {
 .modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(10, 25, 40, 0.45);
+  background: var(--backdrop);
 }
 
 .modal-body {
@@ -441,12 +533,12 @@ select:focus {
   background: var(--surface);
   border-radius: 10px;
   padding: 20px 24px;
-  box-shadow: 0 12px 40px rgba(0, 20, 40, 0.3);
+  box-shadow: var(--shadow-modal);
 }
 
 .modal-body h2 {
   font-size: 17px;
-  color: var(--ucsb-navy);
+  color: var(--heading);
   margin-bottom: 12px;
 }
 
@@ -498,5 +590,23 @@ select:focus {
 
   .picker-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-header {
+    padding: 14px 16px;
+  }
+
+  .modal-body {
+    margin: 16px auto;
+    max-width: calc(100% - 32px);
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-line {
+    transition: none;
   }
 }

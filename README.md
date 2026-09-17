@@ -6,6 +6,10 @@ the result into a ready-to-deliver script.
 
 Built as a static site — no build step, no server, no dependencies.
 
+It runs in three places from the same sources: opened as a local file, served as a static site
+(Fly.io config included), or bundled into a single page with `node build-artifact.js` and
+published as a Claude artifact.
+
 ## Running it
 
 Open `index.html` in a browser, or serve the directory locally:
@@ -28,6 +32,8 @@ research, education programs, student experience, and partnerships.
 - `js/seed-data.js` — the preloaded talking points, generated from `data/talking-points.json`
 - `js/app.js` — filtering, script builder, templates, import/export
 - `data/talking-points.json` — the talking points in their portable, importable form
+- `build-artifact.js` — bundles everything into `dist/bren-talking-points.html` for publishing
+- `Dockerfile`, `fly.toml` — static-server deployment config
 
 ## How it works
 
@@ -95,9 +101,9 @@ To extend the taxonomy itself, edit `js/taxonomy.js`.
 Edits, added points, scripts, and templates are saved in **your browser's local storage**, per
 browser and per device. They are not synced anywhere, and clearing site data clears them.
 
-- **Export JSON** downloads the full current set of talking points. Use it as a backup, or to
-  move your collection to another browser or share it with a collaborator (who imports it via
-  **Import batch**).
+- **Export JSON** shows the full current set of talking points, to copy or download. Use it as a
+  backup, or to move your collection to another browser or share it with a collaborator (who
+  imports it via **Import batch**).
 - The preloaded 102 points live in the code, so a browser with no saved data always starts from
   that baseline. To rebuild from it after unwanted changes, clear this site's local storage and
   reload.

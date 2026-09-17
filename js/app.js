@@ -585,17 +585,69 @@
     renderAll();
   }
 
-  function exportPoints() {
-    const exportable = state.points.map(({ id, ...rest }) => rest);
-    downloadJSON(exportable, "bren-talking-points-export.json");
+  const EXPORT_FILENAME = "bren-talking-points-export.json";
+
+  // In the Claude artifact viewer a page can only hand over a file through the downloads
+  // capability, and a plain <a download> is inert; on the web the reverse. Resolve which one
+  // this view has, and only offer the button when a save path exists.
+  const inArtifactViewer = !!(window.claude && typeof window.claude.use === "function");
+  let downloadsApi = null;
+
+  if (inArtifactViewer) {
+    window.claude
+      .use("downloads")
+      .then((ns) => {
+        downloadsApi = ns;
+        document.getElementById("export-download-btn").hidden = !ns;
+      })
+      .catch(() => {});
   }
 
-  function downloadJSON(obj, filename) {
-    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
+  function exportJSON() {
+    return JSON.stringify(state.points.map(({ id, ...rest }) => rest), null, 2);
+  }
+
+  function openExportModal() {
+    document.getElementById("export-textarea").value = exportJSON();
+    document.getElementById("export-count").textContent = String(state.points.length);
+    document.getElementById("export-download-btn").hidden = inArtifactViewer && !downloadsApi;
+    document.getElementById("export-modal").classList.add("open");
+  }
+
+  function closeExportModal() {
+    document.getElementById("export-modal").classList.remove("open");
+  }
+
+  async function copyExport() {
+    const textarea = document.getElementById("export-textarea");
+    try {
+      await navigator.clipboard.writeText(textarea.value);
+    } catch (e) {
+      textarea.select();
+      document.execCommand("copy");
+    }
+    flashStatus("export-status", "Copied to clipboard.");
+  }
+
+  async function downloadExport() {
+    const json = exportJSON();
+
+    if (downloadsApi) {
+      try {
+        await downloadsApi.save({ filename: EXPORT_FILENAME, data: json });
+        flashStatus("export-status", "Saved.");
+      } catch (e) {
+        if (e && e.code === "declined") return;
+        flashStatus("export-status", "Couldn't save the file. Use Copy JSON instead.");
+      }
+      return;
+    }
+
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = filename;
+    a.download = EXPORT_FILENAME;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -618,7 +670,11 @@
 
     document.getElementById("add-point-btn").addEventListener("click", () => openPointModal(null));
     document.getElementById("import-btn").addEventListener("click", openImportModal);
-    document.getElementById("export-btn").addEventListener("click", exportPoints);
+    document.getElementById("export-btn").addEventListener("click", openExportModal);
+    document.getElementById("export-modal-close").addEventListener("click", closeExportModal);
+    document.getElementById("export-modal-backdrop").addEventListener("click", closeExportModal);
+    document.getElementById("export-copy-btn").addEventListener("click", copyExport);
+    document.getElementById("export-download-btn").addEventListener("click", downloadExport);
 
     document.getElementById("point-modal-cancel").addEventListener("click", closePointModal);
     document.getElementById("point-modal-save").addEventListener("click", savePointFromModal);
