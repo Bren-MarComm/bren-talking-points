@@ -1,3 +1,5 @@
 FROM pierrezemb/gostatic
-COPY . /srv/http/
-CMD ["-port","8080","-https-promote", "-enable-logging"]
+COPY index.html /srv/http/index.html
+COPY css /srv/http/css
+COPY js /srv/http/js
+CMD ["-port", "8080", "-log-level", "info"]
